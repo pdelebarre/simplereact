@@ -29,7 +29,7 @@ export default function InputSlider() {
   return (
     <Box sx={{ width: 250 }}>
       <Typography id="input-slider" gutterBottom>
-        Volume
+        Temperature
       </Typography>
       <Grid container spacing={2} alignItems="center">
         <Grid item>
