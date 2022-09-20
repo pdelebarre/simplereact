@@ -1,63 +1,101 @@
 import * as React from "react";
 import { styled } from "@mui/material/styles";
-import { Box, Grid, Typography, Slider, Input } from "@mui/material";
-import { VolumeUp } from "@mui/icons-material";
+import { Grid, InputLabel, Slider, Input, InputAdornment } from "@mui/material";
 
-const MyInput = styled(Input)`
-  width: 42px;
+const InputCelsius = styled(Input)`
+  width: 56;
+`;
+
+const InputFahrenheit = styled(Input)`
+  width: 56;
 `;
 
 export default function InputSlider() {
-  const [value, setValue] = React.useState(30);
+  const [celsius, setCelsius] = React.useState(32);
+  const [fahrenheit, setFahrenheit] = React.useState(0);
 
-  const handleSliderChange = (event, newValue) => {
-    setValue(newValue);
+  const [MIN, MAX] = [-100, 100];
+
+  const c2f = (c) => {
+    return Math.floor((c * 9) / 5 + 32);
   };
 
-  const handleInputChange = (event) => {
-    setValue(event.target.value === "" ? "" : Number(event.target.value));
+  const f2c = (f) => {
+    return Math.floor(((f - 32) * 5) / 9);
+  };
+
+  const handleSliderChange = (event, newValue) => {
+    setCelsius(newValue);
+    setFahrenheit(c2f(celsius));
+  };
+
+  const handleInputCChange = (event) => {
+    let c = Number(event.target.value);
+    setCelsius(event.target.value === "" ? "" : Number(c));
+    setFahrenheit(c2f(celsius));
+  };
+
+  const handleInputFChange = (event) => {
+    let f = Number(event.target.value);
+    setFahrenheit(event.target.value === "" ? "" : Number(f));
+    setCelsius(f2c(fahrenheit));
   };
 
   const handleBlur = () => {
-    if (value < 0) {
-      setValue(0);
-    } else if (value > 100) {
-      setValue(100);
+    if (celsius < MIN) {
+      setCelsius(MIN);
+    } else if (celsius > MAX) {
+      setCelsius(MAX);
     }
   };
 
   return (
-    <Box sx={{ width: 250 }}>
-      <Typography id="input-slider" gutterBottom>
-        Temperature
-      </Typography>
+    <>
+      <InputLabel shrink>Conversion C / F</InputLabel>
       <Grid container spacing={2} alignItems="center">
         <Grid item>
-          <VolumeUp />
+          <InputCelsius
+            alignItems="center"
+            value={celsius}
+            margin="dense"
+            // size="small"
+            onChange={handleInputCChange}
+            onBlur={handleBlur}
+            inputProps={{
+              step: 1,
+              min: MIN,
+              max: MAX,
+              type: "number",
+              "aria-labelledby": "input-slider",
+            }}
+            endAdornment={<InputAdornment position="end">C</InputAdornment>}
+          />
         </Grid>
+
         <Grid item xs>
           <Slider
-            value={typeof value === "number" ? value : 0}
+            value={typeof celsius === "number" ? celsius : 0}
             onChange={handleSliderChange}
             aria-labelledby="input-slider"
           />
         </Grid>
         <Grid item>
-          <MyInput
-            value={value}
+          <InputFahrenheit
+            value={fahrenheit}
             size="small"
-            onChange={handleInputChange}
+            onChange={handleInputFChange}
             onBlur={handleBlur}
             inputProps={{
-              step: 10,
-              min: 0,
-              max: 100,
+              step: 1,
+              min: MIN,
+              max: MAX,
               type: "number",
               "aria-labelledby": "input-slider",
             }}
+            endAdornment={<InputAdornment position="end">F</InputAdornment>}
           />
         </Grid>
       </Grid>
-    </Box>
+    </>
   );
 }
