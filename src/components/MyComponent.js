@@ -1,7 +1,7 @@
 import React from "react";
 
 const MyComponent = () => {
-  return <div>Hello React World!</div>;
+  return <div>Testing GitHub Actions with Basic React App</div>;
 };
 
 export default MyComponent;
